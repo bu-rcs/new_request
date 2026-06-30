@@ -14,7 +14,9 @@ Do the following, then stop and report:
    TRIAGE="$(dirname "$(readlink -f .claude)")/bin/triage_build_log.sh"
    "$TRIAGE" context/logs/<log>
    ```
-   (or invoke the `triage-build-log` skill, which does the same). Record each log's classification + key finding. If the triage shows an **R package install failure**, recommend the **`r-install-debugger`** agent as the next step (don't run it yourself here).
+   (or invoke the `triage-build-log` skill, which does the same). Record each log's classification + key finding. If the triage shows an **R package install failure**, recommend the **`r-install-debugger`** agent as the next step (don't run it yourself here) — **but gate that recommendation per the rule below**.
+   - **Before recommending any compile-heavy reproduction** (e.g. the `r-install-debugger` agent), check whether `context/` actually contains the researcher's **exact command** and **verbatim error text / screenshot**. If either is missing, your top recommended next step is to *ask the facilitator for them* — not to reproduce. The actual command and error are cheap and frequently reveal a shallow root cause (wrong/missing package name, stale `00LOCK`, non-writeable library, wrong repo) that needs no compilation.
+   - **Diagnose cheap → expensive.** Order: (1) read the exact command + error, (2) check for stale `00LOCK-*` dirs and library write-permission issues, (3) only then run the `r-install-debugger` agent to reproduce a genuine build/compile failure.
 5. **Environment** — Read `./module_load.sh` (modules, `R_LIBS_USER`, toolset PATH, cache/config isolation) and, if present, `./env_setup/renv.lock` (reproduced R package versions). Note the version(s) and any packages relevant to the issue.
 6. **Write the summary** — Create or update `./context/SUMMARY.md` with these sections:
    - **Problem** — concise statement of the issue (from `context/`).
@@ -23,5 +25,7 @@ Do the following, then stop and report:
    - **Logs** — for each log in `context/logs/`: what it is, and the triage classification / key finding (not the raw log).
    - **Links / References** — from `context/links.md`.
    - **Open questions** — what's unclear or needs the facilitator's input.
+
+   Treat `SUMMARY.md` as a living document, but when new evidence *contradicts* an earlier finding, **replace** the stale section rather than appending a new one — don't leave the file holding both the old guess and the new fact. If several sections are now wrong, rewrite the whole file once instead of layering many partial edits.
 
 Then give me a short (5–10 line) summary of the request and ask which part to investigate first. Do not start changing the researcher's scripts yet.

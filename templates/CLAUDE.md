@@ -35,3 +35,10 @@ From the symlinked `.claude/` and (once you `source module_load.sh`) the `bin/<l
 - The reproduced library is a **faithful copy** of the researcher's environment (same cluster, same R version/arch) — treat package versions as fixed evidence, not something to "fix" by upgrading, unless that is the diagnosis.
 - `renv.lock` is the audit record of what was reproduced; consult it to reason about package versions.
 - Don't write outside this workspace; don't modify the facilitator's home directory.
+
+## Gotchas (read before running R / asserting dependencies)
+
+- **Never pipe `source module_load.sh`.** Piping (e.g. `source module_load.sh | tail`) runs it in a subshell, so the environment does not persist and `Rscript`/`R` won't be found in later commands. Source it directly, then sanity-check with `which Rscript` before any heavy command. Each Bash call is a fresh shell, so re-`source` at the top of every R command (or bundle the R work into one Bash call).
+- **Verify a package is actually a dependency before treating it as one.** Check the target's `Imports`/`Depends`/`LinkingTo` (e.g. `tools::package_dependencies()` or the package's `DESCRIPTION`) rather than assuming. (A companion package shipped alongside the target is *not* necessarily a dependency.)
+- **Use the version-specific Bioconductor page** that matches the loaded module's Bioc release: `https://bioconductor.org/packages/<3.XX>/bioc/html/<pkg>.html`. The generic `/packages/release/` page describes the *current* package version, whose dependencies/`SystemRequirements` may differ from the one that installs on this R.
+- **Stale `00LOCK-<pkg>` directories** in a library (an `R CMD INSTALL` lock left by an interrupted install) cause `failed to lock directory ... Try removing .../00LOCK-<pkg>` and `cannot install` errors. Check for and remove them early — in both the workspace library (`$R_LIBS_USER`) and, when relevant, the researcher's personal library.
