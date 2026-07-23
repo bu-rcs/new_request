@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Common tools (top-level `bin/`):** `new_request.sh` (scaffolder) and `triage_build_log.sh` (general build-log analyzer). Put `bin/` on your `PATH`.
 - **Per-language toolsets (`bin/<lang>/`):** e.g. `bin/r/` holds `r_env.sh`, `r_snapshot.sh`, `r_install.sh`; `bin/python/` is a placeholder. These are **activated per request** (see Running) rather than always on `PATH`.
+- **Shared library (`bin/lib/`):** sourceable helpers used by the scripts (not on `PATH`, not run directly). `hpc_guard.sh` defines `require_compute_node`, which any script that compiles **must** call before building — it refuses to run on an SCC login node (no `$NSLOTS`/`$JOB_ID`) and points the facilitator at `qrsh` (override: `ALLOW_LOGIN_NODE=1`). Currently wired into `bin/r/r_env.sh`, `r_install.sh`, and `r_snapshot.sh`; the `r-install-debugger` agent surfaces the refusal rather than bypassing it.
 - **`.claude/`** holds commands (`commands/init-request.md`), skills (`skills/triage-build-log/`), and agents (`agents/r-install-debugger.md`), symlinked whole into every workspace.
 
 ## Running

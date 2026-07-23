@@ -38,6 +38,11 @@ if [ ! -f "$WORKSPACE/module_load.sh" ]; then
   exit 1
 fi
 
+# Refuse heavy compilation on a login node (this installs/compiles languageserver
+# and vscDebugger). Gate early so the facilitator gets a job before any setup work.
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/hpc_guard.sh"
+require_compute_node || exit 1
+
 # Determine the module to load and its library directory.
 R_MODULE_DEFAULT=R
 if [ -z "$R_MODULE" ]; then
