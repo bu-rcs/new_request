@@ -53,6 +53,12 @@ if [ ! -d "${R_LIBS_USER}" ] || [ -z "$(ls -A "${R_LIBS_USER}" 2>/dev/null)" ]; 
   exit 1
 fi
 
+# Refuse heavy compilation on a login node: the renv install below compiles on
+# first run. (Snapshotting itself is light; override with ALLOW_LOGIN_NODE=1 if
+# renv is already present and you just need to re-record the lockfile.)
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/hpc_guard.sh"
+require_compute_node || exit 1
+
 # Install renv into a dedicated tools library so it stays out of the manifest.
 export RENV_TOOLS_LIB="$(pwd)/env_setup/.renv-tools"
 mkdir -p "${RENV_TOOLS_LIB}"

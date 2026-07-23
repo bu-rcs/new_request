@@ -24,8 +24,14 @@ Do the following, then stop and report:
    - **Scripts** — inventory with entry point(s) and run command(s).
    - **Logs** — for each log in `context/logs/`: what it is, and the triage classification / key finding (not the raw log).
    - **Links / References** — from `context/links.md`.
-   - **Open questions** — what's unclear or needs the facilitator's input.
+   - **Open questions** — what's unclear, split into: **(a) for the facilitator** — gaps you can likely fill from what you already know or can look up; and **(b) for the researcher** — information that isn't in the workspace and can't be inferred, phrased as ready-to-forward questions.
 
    Treat `SUMMARY.md` as a living document, but when new evidence *contradicts* an earlier finding, **replace** the stale section rather than appending a new one — don't leave the file holding both the old guess and the new fact. If several sections are now wrong, rewrite the whole file once instead of layering many partial edits.
 
-Then give me a short (5–10 line) summary of the request and ask which part to investigate first. Do not start changing the researcher's scripts yet.
+7. **Clarify** — Before finalizing, judge whether the context is actually enough to troubleshoot. If key information is missing or ambiguous, **ask clarifying questions rather than guessing** — don't force a conclusion past a genuine gap. I (the facilitator) may not have realized what was worth including, so raise it. Sort each question by who can answer it:
+   - **For me (the facilitator)** — things I likely know or can determine but didn't record (e.g. what "it doesn't work" concretely means, which node/queue/module, expected vs. actual behavior, whether a workaround was tried). Ask these directly.
+   - **For the researcher** — information that isn't in the workspace and can't be inferred (e.g. the exact command they ran, verbatim error text or a screenshot, the R version they used, dataset/path locations). Say plainly that these probably need to go back to the researcher, and phrase each as a question I can forward as-is.
+
+   Ask only where an answer would genuinely change the diagnosis; if the context is already sufficient, say so and move on. This is the same instinct behind the reproduction gate in step 4 (ask for the exact command + error before reproducing) — applied to the whole request.
+
+Then give me a short (5–10 line) summary of the request, surface the clarifying questions from step 7 (grouped **for me** vs. **for the researcher**), and ask which part to investigate first. Do not start changing the researcher's scripts yet.

@@ -20,6 +20,10 @@ WORKSPACE="${2:-$PWD}"
 WORKSPACE="$(cd "$WORKSPACE" 2>/dev/null && pwd)" || { printf 'ERROR: no such workspace: %s\n' "${2:-$PWD}" >&2; exit 2; }
 [ -f "$WORKSPACE/module_load.sh" ] || { printf 'ERROR: %s is not a request workspace (no module_load.sh)\n' "$WORKSPACE" >&2; exit 2; }
 
+# Refuse heavy compilation on a login node (this installs/compiles the package).
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lib/hpc_guard.sh"
+require_compute_node || exit 3
+
 # Locate the sibling triage tool (bin/triage_build_log.sh) regardless of PATH.
 TRIAGE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/triage_build_log.sh"
 
